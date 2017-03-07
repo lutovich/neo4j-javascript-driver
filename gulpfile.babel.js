@@ -169,6 +169,7 @@ gulp.task('test-nodejs', ['install-driver-into-sandbox'], function () {
             //   savePath: "build/nodejs-test-reports",
             //   consolidateAll: false
             // }),
+            verbose: true,
             includeStackTrace: true
         }));
 });
@@ -176,6 +177,7 @@ gulp.task('test-nodejs', ['install-driver-into-sandbox'], function () {
 gulp.task('test-boltkit', ['nodejs'], function () {
   return gulp.src('test/**/*.boltkit.it.js')
     .pipe(jasmine({
+      verbose: true,
       // reporter: new reporters.JUnitXmlReporter({
       //   savePath: "build/nodejs-test-reports",
       //   consolidateAll: false

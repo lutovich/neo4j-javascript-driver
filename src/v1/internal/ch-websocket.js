@@ -63,6 +63,7 @@ class WebSocketChannel {
     //All connection errors are not sent to the error handler
     //we must also check for dirty close calls
     this._ws.onclose = function(e) {
+      // console.log('--- web socket close: ' + JSON.stringify(e))
         if (!e.wasClean) {
           self._handleConnectionError();
         }
@@ -82,7 +83,10 @@ class WebSocketChannel {
       }
     };
 
-    this._ws.onerror = this._handleConnectionError;
+    this._ws.onerror = e => {
+      // console.log('--- web socket error: ' + JSON.stringify(e))
+      this._handleConnectionError(e);
+    }
   }
 
   _handleConnectionError() {

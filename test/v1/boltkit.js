@@ -23,7 +23,7 @@ var fs = require('fs');
 var tmp = require('tmp');
 
 var BoltKit = function (verbose) {
-  this.verbose = verbose || false;
+  this.verbose = verbose || true;
 };
 
 BoltKit.prototype.startWithTemplate = function (scriptTemplate, parameters, port) {

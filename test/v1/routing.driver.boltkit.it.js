@@ -21,6 +21,8 @@ import neo4j from '../../src/v1';
 import boltkit from './boltkit';
 import RoutingTable from '../../src/v1/internal/routing-table';
 
+// process.on('unhandledRejection', r => console.log(r));
+
 describe('routing driver', () => {
   let originalTimeout;
 
@@ -728,6 +730,7 @@ describe('routing driver', () => {
   });
 
   it('should re-use connections', done => {
+    console.log('+++ should re-use connections START +++')
     if (!boltkit.BoltKitSupport) {
       done();
       return;
@@ -752,6 +755,7 @@ describe('routing driver', () => {
                 expect(connections).toEqual(Object.keys(driver._openSessions).length);
                 expect(code1).toEqual(0);
                 expect(code2).toEqual(0);
+                console.log('+++ should re-use connections DONE +++')
                 done();
               });
             });
@@ -907,6 +911,7 @@ describe('routing driver', () => {
   });
 
   it('should close connection used for routing table refreshing', done => {
+    console.log('--- should close connection used for routing table refreshing START ---')
     if (!boltkit.BoltKitSupport) {
       done();
       return;
@@ -924,8 +929,11 @@ describe('routing driver', () => {
       setUpPoolToMemorizeAllAcquiredAndReleasedConnections(driver, acquiredConnections, releasedConnections);
 
       const session = driver.session();
+      console.log('running query')
       session.run('MATCH (n) RETURN n.name').then(() => {
+        console.log('closing session')
         session.close(() => {
+          console.log('closing driver')
           driver.close();
           server.exit(code => {
             expect(code).toEqual(0);
@@ -939,11 +947,11 @@ describe('routing driver', () => {
             for (let i = 0; i < acquiredConnections.length; i++) {
               expect(acquiredConnections[i]).toBe(releasedConnections[i]);
             }
-
+            console.log('--- should close connection used for routing table refreshing END ---')
             done();
           });
         });
-      });
+      }).catch(console.log);
     });
   });
 
